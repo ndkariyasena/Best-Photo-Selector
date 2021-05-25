@@ -1,0 +1,26 @@
+.hover-button {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.customize {
+  height: 300px !important;
+  width: 100%;
+}
+
+.padding-non {
+  padding: 0 !important;
+}
+
+.margin-non {
+  margin: 0 !important;
+}
+
+.spacing-bottom-25 {
+  margin-bottom: 25px;
+}
+
+.spacing-bottom-50 {
+  margin-bottom: 50px;
+}

@@ -1,0 +1,6 @@
+{
+  "BASE_URLS":{
+    "MANAGEMENT_SERVER": "http://localhost:5000/v1"
+  },
+  "SOURCE_SERVER": "https://dev-pb-apps.s3-eu-west-1.amazonaws.com/collection/CHhASmTpKjaHyAsSaauThRqMMjWanYkQ.json"
+}

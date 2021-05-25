@@ -1,0 +1,238 @@
+import { BestPhotosTypes, CommonTypes } from "../constants";
+
+import HTTP_SERVICE from "../service/httpService";
+
+import Configs from "../../configs";
+
+const BASE_URL = `${Configs.BASE_URLS.MANAGEMENT_SERVER}/best-photos`;
+
+export const getAllBestPhotoOrderForUser = (userId = null) => {
+
+  return async dispatch => {
+
+    try {
+
+      if (!userId ) throw Error('UserId is empty');
+
+      dispatch({
+        type: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
+        payload: { status: CommonTypes.STATUS_PENDING }
+      });
+
+      const request = {
+        url: `${BASE_URL}/user/${userId}`,
+      };
+
+      return await HTTP_SERVICE.get(request)
+        .then((response) => {
+
+          if (response && response.orders && response.orders.length > 0) {
+
+            dispatch({
+              type: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
+              payload: {
+                status: CommonTypes.STATUS_SUCCESS,
+                orders: response.orders,
+                userId,
+              }
+            });
+
+            return response.orders;
+
+          }
+
+          return {};
+
+        })
+        .catch((error) => {
+          
+          dispatch({
+            type: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
+            payload: { status: CommonTypes.STATUS_FAILED }
+          });
+
+          return error;
+
+        });
+
+    } catch (error) {
+      throw error;
+    }
+
+  };
+
+};
+
+export const getBestPhotoOrderById = (orderId = null) => {
+
+  return async dispatch => {
+
+    try {
+
+      if (!orderId) throw Error('OrderId is empty');
+
+      dispatch({
+        type: BestPhotosTypes.GET_PHOTO_ORDER_BY_ID,
+        payload: { status: CommonTypes.STATUS_PENDING }
+      });
+
+      const request = {
+        url: `${BASE_URL}/order/${orderId}`,
+      };
+
+      return await HTTP_SERVICE.get(request)
+        .then((response) => {
+
+          if (response && response.id) {
+
+            dispatch({
+              type: BestPhotosTypes.GET_PHOTO_ORDER_BY_ID,
+              payload: {
+                status: CommonTypes.STATUS_SUCCESS,
+                order: response,
+              }
+            });
+
+            return response;
+
+          }
+
+          return {};
+
+        })
+        .catch((error) => {
+          
+          dispatch({
+            type: BestPhotosTypes.GET_PHOTO_ORDER_BY_ID,
+            payload: { status: CommonTypes.STATUS_FAILED }
+          });
+
+          return error;
+
+        });
+
+    } catch (error) {
+      throw error;
+    }
+
+  };
+
+};
+
+export const savePhotoOrder = (photoOrder = {}, userId = null) => {
+
+  return async dispatch => {
+
+    try {
+
+      if (!userId) throw Error('UserId is empty');
+
+      dispatch({
+        type: BestPhotosTypes.SAVE_PHOTO_ORDER,
+        payload: { status: CommonTypes.STATUS_PENDING }
+      });
+
+      const request = {
+        url: `${BASE_URL}/`,
+        body: { photoOrder, userId }
+      };
+
+      return await HTTP_SERVICE.post(request)
+        .then((response) => {
+
+          if (response && response.id) {
+
+            dispatch({
+              type: BestPhotosTypes.SAVE_PHOTO_ORDER,
+              payload: {
+                status: CommonTypes.STATUS_SUCCESS,
+                order: response,
+              }
+            });
+
+            return response;
+
+          }
+
+          return {};
+
+        })
+        .catch((error) => {
+          
+          dispatch({
+            type: BestPhotosTypes.SAVE_PHOTO_ORDER,
+            payload: { status: CommonTypes.STATUS_FAILED }
+          });
+
+          return error;
+
+        });
+
+    } catch (error) {
+      throw error;
+    }
+
+
+
+  };
+
+};
+
+export const updatePhotoOrder = (photoOrder = {}, userId = null, orderId = null) => {
+
+  return async dispatch => {
+
+    try {
+
+      if (!userId) throw Error('UserId is empty');
+
+      if (!orderId) throw Error('UserId is empty');
+
+      dispatch({
+        type: BestPhotosTypes.UPDATE_PHOTO_ORDER,
+        payload: { status: CommonTypes.STATUS_PENDING }
+      });
+
+      const request = {
+        url: `${BASE_URL}/`,
+        body: { photoOrder, userId, orderId }
+      };
+
+      return await HTTP_SERVICE.put(request)
+        .then((response) => {
+
+          if (response && response.id) {
+
+            dispatch({
+              type: BestPhotosTypes.UPDATE_PHOTO_ORDER,
+              payload: {
+                status: CommonTypes.STATUS_SUCCESS,
+                order: response,
+              }
+            });
+
+            return response;
+
+          }
+
+          return {};
+
+        })
+        .catch((error) => {
+          
+          dispatch({
+            type: BestPhotosTypes.UPDATE_PHOTO_ORDER,
+            payload: { status: CommonTypes.STATUS_FAILED }
+          });
+
+          return error;
+
+        });
+
+    } catch (error) {
+      throw error;
+    }
+
+  };
+
+};
