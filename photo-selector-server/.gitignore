@@ -117,7 +117,8 @@ dist
 
 .vscode
 
-/src/v1/config/env/*.json
+src/v1/config/env/*.json
+src/config/env/*.json
 
 logs/
 public_v1/

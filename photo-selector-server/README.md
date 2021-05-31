@@ -5,6 +5,11 @@ This README document will provide steps to get this application up and running.
 - `Create .env file`
   - `To run the project in docker >> copy` docker_env `to .env`
   - `To run the project in local >> copy` local_env `to .env`
+- `Create .json file with node environment name (development.json) in below directories`
+  - `src/v1/config/env/`
+    - `Copy` sample `to *.json`
+  - `src/config/env/`
+    - `Copy` sample `to *.json`
 - `Run 'npm install' or 'npm i'` (within the directory)
 - `To start the project :`
   - `In local >> type the command in terminal 'npm start' or 'npm run dev'`
