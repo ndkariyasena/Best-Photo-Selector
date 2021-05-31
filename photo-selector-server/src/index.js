@@ -8,6 +8,7 @@ const router = require('./router');
 
 const v1 = require('./v1');
 
+/* JSON Bodyparser configurations */
 const { JSON_PARSER_LIMIT } = process.env;
 
 const BODYPARSER = {

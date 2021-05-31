@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Home from "./views/Home.jsx";
+import Home from "./views/HomeNew.jsx";
 
-const TopPhotos = React.lazy(() => import('./views/TopPhotos.jsx'));
+const TopPhotos = React.lazy(() => import('./views/PhotoAlbum.jsx'));
 
 const routes = [
   {

@@ -1,6 +1,6 @@
 /* cSpell:ignore signin */
 
-import { PhotoRepoTypes } from "../constants";
+import { PhotoRepoTypes, UserTypes } from "../constants";
 
 const initialState = {
   author: {},
@@ -30,6 +30,42 @@ const auth = (state = initialState, action) => {
         delete photos.entries;
 
         updates['details'] = { ...photos };
+      }
+
+      return Object.assign({}, state, updates);
+    }
+
+    case UserTypes.GET_USER_DETAILS: {
+
+      const updates = {
+        processStatus: (action.payload.status) ? action.payload.status : null,
+      };
+
+      if( action.payload.photos ) {
+
+        const user = { ...action.payload.user };
+
+        updates['details'] = { code : user.collectionId };
+
+        delete user.collectionId;
+        
+        updates['author'] = { ...user };
+      }
+
+      return Object.assign({}, state, updates);
+    }
+
+    case UserTypes.GET_USER_COLLECTIONS_DETAILS: {
+
+      const updates = {
+        processStatus: (action.payload.status) ? action.payload.status : null,
+      };
+
+      if( action.payload.photos ) {
+
+        const details = { ...action.payload.details };
+
+        updates['details'] = { ...details };
       }
 
       return Object.assign({}, state, updates);

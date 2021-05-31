@@ -1,0 +1,34 @@
+paths:
+  /best-photos/:
+    post:
+      tags:
+        - Best photos collection
+      summary: "Create new best photo collections"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Will create a new best photo order/collection for the user
+          required: true
+          schema:
+            type: object
+            properties:
+              userId:
+                type: number
+              photoOrder:
+                type: object
+      responses:
+        201:
+          allOf:
+            - $ref: "#components/responses/201"
+            - schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/definitions/best-photos"
+        400:
+          $ref: "#components/responses/400"
+        500:
+          $ref: "#components/responses/500"

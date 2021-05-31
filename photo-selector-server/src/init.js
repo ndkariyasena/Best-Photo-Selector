@@ -10,33 +10,8 @@ const initRoute = (message) => (req, res) => {
   });
 };
 
-const completeTheRequest = async (req, res) => {
-
-  try {
-
-    const { token, user, response } = req;
-
-    const responseData = {};
-
-    if( token ) responseData['token'] = token;
-
-    if( user ) responseData['user'] = user;
-
-    if( response ) responseData['response'] = response;
-
-    res.status(201).json(responseData);
-
-  } catch (error) {
-    const statusCode = ( error && error.statusCode ) ? error.statusCode : 500;
-
-    res.status(statusCode).json(error);
-
-  }
-};
-
 module.exports = {
 
   initRoute,
 
-  completeTheRequest,
 };

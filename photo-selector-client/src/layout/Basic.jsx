@@ -1,26 +1,54 @@
-import React from 'react';
-
 import PropTypes from 'prop-types';
 
-import { Navbar, Nav } from 'react-bootstrap';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
 
 const Basic = (props) => {
+  const classes = useStyles();
 
   return (
     <>
-      <Navbar bg="primary" variant="dark">
-        <Navbar.Brand href="#home">PhotoBook</Navbar.Brand>
-        <Nav activeKey={window.location.pathname} className="mr-auto">
-          <Nav.Link href="/">Home</Nav.Link>
-          <Nav.Link href="/top-photos">Selection</Nav.Link>
-        </Nav>
-      </Navbar>
-      
+      <div className={classes.root}>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" className={classes.title}>
+              Gallery
+            </Typography>
+            <div>
+              <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+      </div>
       {props.children}
     </>
-  )
-
+  );
 }
+
 
 Basic.propTypes = {
   component: PropTypes.elementType,

@@ -100,6 +100,30 @@ body {
   z-index: 10;
 }
 
+.loadingWrapper {
+  margin: auto;
+  position: relative;
+  align-items: center;
+  display: flex;
+  top: 50px;
+  width: fit-content;
+}
+
+.hover03 {
+	-webkit-transform: scale(1.5);
+	transform: scale(1.5);
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+.hover03:hover {
+	-webkit-transform: scale(1);
+	transform: scale(1);
+}
+
+.margin-bottom-10 {
+  margin-bottom: 10%;
+}
+
 /* Responsive layout - makes a two column-layout instead of four columns */
 @media screen and (max-width: 800px) {
   .column {

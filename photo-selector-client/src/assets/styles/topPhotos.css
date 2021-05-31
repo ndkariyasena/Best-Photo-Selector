@@ -24,3 +24,17 @@
 .spacing-bottom-50 {
   margin-bottom: 50px;
 }
+
+.rounded-button {
+  border-radius: 50% !important;
+}
+
+.selected-radio {
+  background-color: green !important;
+}
+
+.radio-button-wrapper {
+  position: absolute;
+  bottom: 2%;
+  left: 2%;
+}

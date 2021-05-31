@@ -1,0 +1,61 @@
+definitions: # Schema definition for request body
+  photo-gallery:
+    type: object
+    properties:
+      id:
+        type: string
+      code:
+        type: string
+      startDate:
+        type: number
+      endDate:
+        type: number
+      author:
+        type: object
+        properties:
+          id:
+            type: string
+          updatedAt:
+            type: date
+            example: "019-10-28 16:07:53"
+          name:
+            type: string
+          firstName:
+            type: string
+          lastName:
+            type: string
+          picture:
+            type: string
+          source:
+            type: string
+          lang:
+            type: string
+          country:
+            type: string
+          sourceId:
+            type: string
+          email:
+            type: string
+      cover:
+        type: string
+      is_shareable:
+        type: boolean
+      entries:
+        type: array
+        items: 
+          type: object
+          properties:
+            id:
+              type: string
+            message:
+              type: string
+            picture:
+              type: string
+            pictureSmall:
+              type: string
+            pictureMedium:
+              type: string
+            pictureStored:
+              type: string
+            timestamp:
+              type: number

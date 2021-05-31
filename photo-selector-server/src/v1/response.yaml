@@ -1,37 +1,47 @@
 components:
   responses:
-    401:
-      description: Unauthorized Access
-      schema:
-        $ref: "#/components/responseSchemas/unauthorized"
     200:
       description: Request Completed Successfully
       schema:
         $ref: "#/components/responseSchemas/success"
+    201:
+      description: Record Created Completed Successfully
+      schema:
+        $ref: "#/components/responseSchemas/createSuccess"
+    400:
+      description: Client Error
+      schema:
+        $ref: "#/components/responseSchemas/clientError"
     500:
       description: Unexpected Error
       schema:
         $ref: "#/components/responseSchemas/unexpected"
   responseSchemas:
-    unauthorized:
+    success:
       type: "object"
       properties:
         httpCode:
           type: integer
-          example: 401
+          example: 200
         type:
           type: string
-          example: UNAUTHORIZED
+          example: SUCCESS
         code:
           type: integer
-          example: 25401
+          example: 200
         message:
           type: string
-          example: "unauthorized request"
+          example: "ok"
         success:
           type: "boolean"
-          example: false
-    success:
+          example: true
+        data:
+          oneOf:
+            - type: "string"
+            - type: "boolean"
+            - type: "object"
+            - type: "array"
+    createSuccess:
       type: "object"
       properties:
         httpCode:
@@ -63,10 +73,28 @@ components:
           example: 500
         type:
           type: string
+          example: EXCEPTION_ERROR
+        code:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: "unexpected error occurred"
+        success:
+          type: "boolean"
+          example: false
+    clientError:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 400
+        type:
+          type: string
           example: INTERNAL_SERVER_ERROR
         code:
           type: integer
-          example: 25500
+          example: 400
         message:
           type: string
           example: "unexpected error occurred"
