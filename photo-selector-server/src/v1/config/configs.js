@@ -1,3 +1,4 @@
+/* Extract config values from ./env/*.json file and make them accessible */
 const ENV_CONFIGURATION = () => {
   try {
     const path = `${process.env.ENV_FILE_PATH}/${process.env.NODE_ENV}.json`;
@@ -16,5 +17,13 @@ const ENV_CONFIGURATION = () => {
 };
 
 module.exports = {
-  ALLOWED_DOMAINS : ENV_CONFIGURATION().ALLOWED_DOMAINS
+  ALLOWED_DOMAINS : ENV_CONFIGURATION().ALLOWED_DOMAINS,
+
+  REDIS : ENV_CONFIGURATION().REDIS,
+
+  EXTERNAL_URLS : ENV_CONFIGURATION().EXTERNAL_URLS,
+
+  PUBLIC_DIR : ENV_CONFIGURATION().PUBLIC_DIR,
+
+  IMAGE_CACHE : ENV_CONFIGURATION().IMAGE_CACHE,
 };

@@ -26,22 +26,64 @@ export const getAllBestPhotoOrderForUser = (userId = null) => {
       return await HTTP_SERVICE.get(request)
         .then((response) => {
 
-          if (response && response.orders && response.orders.length > 0) {
+          if (response && response.data && response.data.orders && response.data.orders.length > 0) {
 
             dispatch({
               type: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
               payload: {
                 status: CommonTypes.STATUS_SUCCESS,
-                orders: response.orders,
+                orders: response.data.orders,
                 userId,
               }
             });
 
-            return response.orders;
+            return response.data.orders;
 
           }
 
           return {};
+
+        })
+        .catch((error) => {
+          
+          dispatch({
+            type: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
+            payload: { status: CommonTypes.STATUS_FAILED }
+          });
+
+          return error;
+
+        });
+
+    } catch (error) {
+      throw error;
+    }
+
+  };
+
+};
+
+export const isPhotoOrdesAvailableForUser = (userId = null) => {
+
+  return async dispatch => {
+
+    try {
+
+      if (!userId ) throw Error('UserId is empty');
+
+      dispatch({
+        type: BestPhotosTypes.IS_PHOTO_ORDERS_AVAILABLE,
+        payload: { status: CommonTypes.STATUS_PENDING }
+      });
+
+      const request = {
+        url: `${BASE_URL}/is-orders/${userId}`,
+      };
+
+      return await HTTP_SERVICE.get(request)
+        .then((response) => {
+
+          return response.data;
 
         })
         .catch((error) => {
@@ -83,17 +125,17 @@ export const getBestPhotoOrderById = (orderId = null) => {
       return await HTTP_SERVICE.get(request)
         .then((response) => {
 
-          if (response && response.id) {
+          if (response.data && response.data.id) {
 
             dispatch({
               type: BestPhotosTypes.GET_PHOTO_ORDER_BY_ID,
               payload: {
                 status: CommonTypes.STATUS_SUCCESS,
-                order: response,
+                order: response.data,
               }
             });
 
-            return response;
+            return response.data;
 
           }
 
@@ -140,17 +182,17 @@ export const savePhotoOrder = (photoOrder = {}, userId = null) => {
       return await HTTP_SERVICE.post(request)
         .then((response) => {
 
-          if (response && response.id) {
+          if (response.data && response.data.id) {
 
             dispatch({
               type: BestPhotosTypes.SAVE_PHOTO_ORDER,
               payload: {
                 status: CommonTypes.STATUS_SUCCESS,
-                order: response,
+                order: response.data,
               }
             });
 
-            return response;
+            return response.data;
 
           }
 
@@ -201,17 +243,17 @@ export const updatePhotoOrder = (photoOrder = {}, userId = null, orderId = null)
       return await HTTP_SERVICE.put(request)
         .then((response) => {
 
-          if (response && response.id) {
+          if (response.data && response.data.id) {
 
             dispatch({
               type: BestPhotosTypes.UPDATE_PHOTO_ORDER,
               payload: {
                 status: CommonTypes.STATUS_SUCCESS,
-                order: response,
+                order: response.data,
               }
             });
 
-            return response;
+            return response.data;
 
           }
 

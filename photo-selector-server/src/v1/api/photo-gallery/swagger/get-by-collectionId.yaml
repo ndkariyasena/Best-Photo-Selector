@@ -1,0 +1,31 @@
+paths:
+  /photo-gallery/collection/:collectionId:
+    get:
+      tags:
+        - Photo Gallery
+      summary: "Get a single photo gallery details by collectionId"
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: collectionId 
+          required: true
+          description: The collection ID
+          schema:
+            type: string
+            example:
+              userId: QDOUgsefgaeWD
+      responses:
+        200:
+          allOf:
+            - $ref: "#components/responses/200"
+            - schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/definitions/photo-gallery"
+        400:
+          $ref: "#components/responses/400"
+        500:
+          $ref: "#components/responses/500"

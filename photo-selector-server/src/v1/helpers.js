@@ -1,20 +1,7 @@
-/**
- * Format error response
- *
- * @param {*} res
- * @param {*} errorMessage
- */
-const Error_Response = (res, errorMessage) => {
-  try {
-    const statusCode = (errorMessage && errorMessage.statusCode) ? errorMessage.statusCode : 500;
+const { Configs } = require('@v1Config');
 
-    res.status(statusCode).json({errorMessage});
-    
-  } catch (error) {
-    res.status(500).json({errorMessage});
-  }
+const path = require('path');
 
-};
 /**
  * Validate photoOrder object in best-photos module 
  *
@@ -36,9 +23,17 @@ const validateOrderObject = (photoOrder = {}) => {
     throw Error(error);
   }
 };
+/**
+ * Will return public directory path
+ *
+ * @returns string
+ */
+const getPublicDir = () => {
+  return path.join(process.cwd(), Configs.PUBLIC_DIR);
+};
 
 module.exports = {
-  Error_Response,
-
   validateOrderObject,
+
+  getPublicDir,
 };

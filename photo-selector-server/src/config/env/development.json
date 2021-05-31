@@ -1,0 +1,5 @@
+{
+  "ALLOWED_DOMAINS": [
+    "http://localhost:3000"
+  ]
+}

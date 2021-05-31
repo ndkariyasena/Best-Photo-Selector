@@ -1,63 +1,57 @@
-const swaggerJSDoc = require('swagger-jsdoc');
+/* V1 version handling root point */
+const express = require('express');
+
+const fs = require('fs');
 
 const swaggerUi = require('swagger-ui-express');
 
-const { Swagger, Configs, Database } = require('@config');
+const { SwaggerModule, CorsModule } = require('@ComModules/');
 
-const { Definition, Apis } = Swagger;
+const { Redis } = require('@ComConfig');
 
-const { DB_NAME } = process.env;
+const { Configs, Database } = require('@v1Config');
 
-const options = {
-  swaggerDefinition: Definition('V1'),
-  apis: [
-    ...Apis['V1'].map(api => `./src/v1/modules/${api}/swagger/*.yaml`),
-    './src/v1/*.yaml',
-    './src/v1/swagger/*.yaml',
-  ]
+const { getPublicDir } = require('@v1/helpers.js');
+
+const { LoggerModule } = require('@ComModules');
+
+const APP_VERSION = 'V1';
+
+/* Swagger configurations */
+const { swaggerSpec, getAPIJson } = SwaggerModule(APP_VERSION);
+
+/* Middleware function for basic logging purpose */
+const loggerMiddleware = (req, res, next) => {
+  LoggerModule.info(req.originalUrl);
+  next();
 };
 
-/**
- * Enable CORS option
- *
- * @param {*} app
- */
-const enableCorsOptions = (app) => {
+const v1App = (app) => {
+  /* Appending; */
 
-  const cors = require('cors');
+  /* CORS configurations */
+  CorsModule(app, Configs.ALLOWED_DOMAINS);
+  
+  /* Logging middleware */
+  app.use(loggerMiddleware);
 
-  const whitelist = Configs.ALLOWED_DOMAINS;
+  /* Swagger endpoints */
+  app.get(`/${APP_VERSION.toLowerCase()}/swagger.json`, getAPIJson);
 
-  const corsOptions = {
-    origin: (origin, callback) => {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    }
-  };
+  app.use(`/${APP_VERSION.toLowerCase()}/api-docs`, swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-  app.use(cors(corsOptions));
+  /* Static folder declaration */
+  const publicDir = getPublicDir();
 
+  if (!fs.existsSync(publicDir)) fs.mkdirSync(publicDir);
+
+  app.use(express.static(publicDir));
+
+  /* Redis server configurations */
+  Redis.createRedisClient(Configs.REDIS);
+
+  /* Database configurations */
+  Database.connect();
 };
 
-const swaggerSpec = swaggerJSDoc(options);
-
-const getAPIJson = (req, res) => {
-
-  res.setHeader('Content-Type', 'application/json');
-
-  res.send(swaggerSpec);
-};
-
-module.exports = (app) => {
-
-  app.get('/v1/swagger.json', getAPIJson);
-
-  app.use('/v1/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-  enableCorsOptions(app);
-
-  Database.connect(DB_NAME);
-};
+module.exports = v1App;

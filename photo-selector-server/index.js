@@ -1,3 +1,5 @@
+/* *** Server starting point *** */
+
 require('module-alias/register');
 
 require('dotenv').config();

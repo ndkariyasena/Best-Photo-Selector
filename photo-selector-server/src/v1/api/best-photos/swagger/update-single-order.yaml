@@ -1,0 +1,36 @@
+paths:
+  /best-photos/:
+    put:
+      tags:
+        - Best photos collection
+      summary: "Update existing best photo collection"
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Will update existing best photo order/collection by userId or orderId
+          required: true
+          schema:
+            type: object
+            properties:
+              userId:
+                type: number
+              orderId:
+                type: number
+              photoOrder:
+                type: object
+      responses:
+        201:
+          allOf:
+            - $ref: "#components/responses/201"
+            - schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/definitions/best-photos"
+        400:
+          $ref: "#components/responses/400"
+        500:
+          $ref: "#components/responses/500"

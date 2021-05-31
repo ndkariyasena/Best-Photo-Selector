@@ -1,0 +1,14 @@
+.image {
+  width: 100%;
+  height: 350px;
+}
+
+.relative-position {
+  position: relative;
+}
+
+.drop-down {
+  position: absolute;
+  right: 5%;
+  top: 5%;
+}

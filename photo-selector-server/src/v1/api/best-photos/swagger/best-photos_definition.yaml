@@ -1,0 +1,18 @@
+definitions: # Schema definition for request body
+  best-photos:
+    type: object
+    properties:
+      id:
+        type: string
+      userId:
+        type: string
+      order:
+        type: object
+      orderName:
+        type: string
+      createdAt:
+        type: date
+        example: "2021-01-01"
+      updatedAt:
+        type: date
+        example: "2021-01-01"

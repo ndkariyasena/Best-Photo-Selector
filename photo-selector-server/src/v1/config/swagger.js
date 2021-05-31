@@ -1,3 +1,4 @@
+/* Swagger configurations */
 const Definition = () => ({
   swagger: '2.0',
   components: {},

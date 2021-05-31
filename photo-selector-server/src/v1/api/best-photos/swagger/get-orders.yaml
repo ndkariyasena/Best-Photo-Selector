@@ -1,0 +1,33 @@
+paths:
+  /best-photos/:
+    get:
+      tags:
+        - Best photos collection
+      summary: "Get available best photo collections details by userId or orderId"
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: userId
+          schema:
+            type: integer
+          description: The user ID
+        - in: query
+          name: orderId
+          schema:
+            type: integer
+          description: The roder ID
+      responses:
+        200:
+          allOf:
+            - $ref: "#components/responses/200"
+            - schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    $ref: "#/definitions/best-photos"
+        400:
+          $ref: "#components/responses/400"
+        500:
+          $ref: "#components/responses/500"
