@@ -6,3 +6,5 @@ This is the client's front end. Build with ReactJs.
 
 ## Photo selector server
 This is the back-end. Build with Nodejs ( ExpressJs ).
+
+Check README files in each folder for configurations

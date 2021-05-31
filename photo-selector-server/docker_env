@@ -5,15 +5,19 @@ NODE_ENV=development
 APP_NAME=User Photo Management
 APP_URL=localhost
 APP_ENV=localhost
-APP_VERSION=V1
+API_VERSIONS=V1
+
+V1_DB_HOST=mongo
+V1_DB_PORT=27017
+V1_DB_USER =
+V1_DB_PASSWORD =
+V1_DB_NAME=photo_book_dev
+V1_DB_NAME_TEST=photo_book_dev_test
 
 JSON_PARSER_LIMIT=50mb
 
-DB_HOST=mongo
-DB_PORT=27017
-DB_USER=
-DB_PASSWORD=
-DB_NAME=photo_book_dev
-DB_NAME_TEST=photo_book_dev_test
-
 ENV_FILE_PATH=./env
+
+CLIENT_APP_URL=http://localhost:3000
+
+#NODE_TLS_REJECT_UNAUTHORIZED=0

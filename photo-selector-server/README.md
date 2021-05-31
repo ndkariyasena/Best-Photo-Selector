@@ -56,10 +56,6 @@ This README document will provide steps to get this application up and running.
 
 #### TODO ####
 * `Unit tests`
-* `Swagger documentations`
 
 #### Areas can improve ####
-* `Response data handeling`
-* `Error handeling`
-* `Error logging`
 * `Typescript integration`
