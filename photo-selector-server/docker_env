@@ -7,10 +7,10 @@ APP_URL=localhost
 APP_ENV=localhost
 API_VERSIONS=V1
 
-V1_DB_HOST=mongo
-V1_DB_PORT=27017
-V1_DB_USER =
-V1_DB_PASSWORD =
+V1_DB_HOST=mongoServer
+V1_DB_PORT=27018
+V1_DB_USER=
+V1_DB_PASSWORD=
 V1_DB_NAME=photo_book_dev
 V1_DB_NAME_TEST=photo_book_dev_test
 

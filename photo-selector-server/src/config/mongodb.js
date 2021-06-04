@@ -21,82 +21,89 @@ const throwError = (message) => {
 
 const connect = (database, appVersion = null) => {
 
-  const oldConnection = connections.find((c) => c.database === database);
+  try {
 
-  if (!oldConnection) {
+    const oldConnection = connections.find((c) => c.database === database);
 
-    if (!appVersion) throwError('App version not found for MongoDB connections');
+    if (!oldConnection) {
 
-    let dbURL = process.env[`${appVersion}_DB_URL`];
+      if (!appVersion) throwError('App version not found for MongoDB connections');
 
-    if (!dbURL) {
+      let dbURL = process.env[`${appVersion}_DB_URL`];
 
-      const HOST = process.env[`${appVersion}_DB_HOST`];
+      if (!dbURL) {
 
-      const PORT = process.env[`${appVersion}_DB_PORT`];
+        const HOST = process.env[`${appVersion}_DB_HOST`];
 
-      if (!HOST || !PORT) throwError(`${appVersion} MongoDB connection parameters are missing`);
+        const PORT = process.env[`${appVersion}_DB_PORT`];
 
-      dbURL = `mongodb://${HOST}:${PORT}/${database}`;
+        if (!HOST || !PORT) throwError(`${appVersion} MongoDB connection parameters are missing`);
 
+        dbURL = `mongodb://${HOST}:${PORT}/${database}`;
+
+      }
+
+      mongoose.set('useCreateIndex', true);
+
+      mongoose.set('useFindAndModify', false);
+
+      const connection = mongoose.createConnection(dbURL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      });
+
+      connections.push({
+        database: database,
+        dbURL: dbURL,
+        conn: connection
+      });
+
+      connection.on('connected', () => {
+
+        console.log(info('Connection is open to ', dbURL));
+
+      });
+
+      connection.on('error', (err) => {
+
+        console.log(warning('Connection has occurred ' + err + ' error'));
+      });
+
+      connection.on('disconnected', () => {
+
+        console.log(error('Connection is disconnected'));
+      });
+
+      process.on('SIGINT', () => {
+
+        connection.close(() => {
+
+          const termination = chalk.bold.magenta;
+
+          console.log(termination('connection is disconnected due to application termination'));
+
+          process.exit(0);
+        });
+      });
+
+      return connection;
     }
 
-    mongoose.set('useCreateIndex', true);
+    return oldConnection;
 
-    mongoose.set('useFindAndModify', false);
-
-    const connection = mongoose.createConnection(dbURL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-
-    connections.push({
-      database: database,
-      dbURL: dbURL,
-      conn: connection
-    });
-
-    connection.on('connected', () => {
-
-      console.log(info('Connection is open to ', dbURL));
-
-    });
-
-    connection.on('error', (err) => {
-
-      console.log(warning('Connection has occurred ' + err + 'error'));
-    });
-
-    connection.on('disconnected', () => {
-
-      console.log(error('Connection is disconnected'));
-    });
-
-    process.on('SIGINT', () => {
-
-      connection.close(() => {
-
-        const termination = chalk.bold.magenta;
-
-        console.log(termination('connection is disconnected due to application termination'));
-
-        process.exit(0);
-      });
-    });
-
-    return connection;
+  } catch (error) {
+    console.log(error);
+    throw Error(error);
   }
-
-  return oldConnection;
 };
 
 const openConnections = (appVersion) => {
 
   const Db_prefix = `${appVersion}_`;
-  
+
   const matches = DB_NAMES.filter((name) => name.match(Db_prefix));
 
-  for( const name of matches ) {
+  for (const name of matches) {
     connect(process.env[name], appVersion);
   }
 

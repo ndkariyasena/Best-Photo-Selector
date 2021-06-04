@@ -7,7 +7,8 @@ const { THROW_ERROR } = require('@src/helpers/responseHandlers');
 
 const Axios = require('@v1Modules/requests/axios');
 
-const RedisClient = Redis.createRedisClient();
+const RedisClient = Redis.createRedisClient(Configs.REDIS);
+// const RedisClient = Redis.redisClient;
 /**
  * Check is data cached under any name
  *

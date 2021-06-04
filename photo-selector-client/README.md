@@ -1,6 +1,10 @@
 # README #
 This README document will provide steps to get this application up and running.
 
+## Project Requirements ##
+- `NodeJs 14.16.1 or higher`
+- `Npm latest version`
+- `React-script 4.0.3`
 ### Basic steps ###
 - `Create development.json file inside `src/configs/env``
   - `Copy `src/configs/env/config_sample`  into  `src/configs/env/development.json
