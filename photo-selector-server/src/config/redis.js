@@ -3,19 +3,22 @@ const Redis = require('redis');
 
 const { promisify } = require('util');
 
-// import { logErrorsInConsole, logDetailsInConsole, logSuccessInConsole } from "../../v1/helpers/utilities";
-
-const Default_port = 6379;
-const Default_host = '127.0.0.1';
+const Default_port = 6380;
+const Default_host = 'redis';
 
 let redisClient = null;
 
 const createRedisClient = (option = {}) => {
 
   try {
+    console.log('1 ', option)
 
     if (redisClient) return redisClient;
 
+    if ( Object.keys(option).length === 0 ) throw ('Redis configs are empty');
+    console.log('2 ', option)
+
+    // redisClient = Redis.createClient('redis://redis:6380');
     redisClient = Redis.createClient(option);
 
     redisClient.on('connect', () => console.log(`Redis client running on ${option.host ? option.host : Default_host}:${option.port ? option.port : Default_port}`));

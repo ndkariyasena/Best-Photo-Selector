@@ -1,0 +1,16 @@
+{
+  "ALLOWED_DOMAINS": [
+    "http://localhost:3000"
+  ],
+  "REDIS": {
+    "port": 6380,
+    "host": "redisServer"
+  },
+  "EXTERNAL_URLS": {
+    "IMAGE_SOURCE_SERVER": "https://dev-pb-apps.s3-eu-west-1.amazonaws.com/collection"
+  },
+  "IMAGE_CACHE": {
+    "TIME": 1440
+  },
+  "PUBLIC_DIR": "public_v1"
+}

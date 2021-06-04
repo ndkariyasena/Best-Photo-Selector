@@ -1,6 +1,31 @@
-version: "3.3"
+version: "3.7"
 
 services:
+  # MongoDB server
+  mongoServer:
+    container_name: photo_selector_mongo
+    restart: on-failure
+    image: mongo
+    hostname: mongoServer
+    command: --port 27018
+    ports:
+      - "27018:27017"
+    expose:
+      - "27018"
+
+  # Redis server
+  redisServer:
+    container_name: photo_selector_redis
+    restart: on-failure
+    image: redis
+    hostname: redisServer
+    command: --port 6380
+    ports:
+      - "6380:6379"
+    expose:
+      - "6380"
+
+  # Nodejs server
   backend:
     container_name: photo_selector_nodejs_server
     restart: on-failure
@@ -9,10 +34,9 @@ services:
       - "5000:5000"
     volumes:
       - .:/app
+    depends_on:
+      - mongoServer
+      - redisServer
     links:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    ports:
-    - "27018:27017"
+      - mongoServer
+      - redisServer

@@ -1,36 +1,64 @@
 # README #
 This README document will provide steps to get this application up and running.
 
-### Basic steps ###
-- `Create .env file`
-  - `To run the project in docker >> copy` docker_env `to .env`
+## Project Requirements ##
+- `NodeJs 14.16.1 or higher`
+- `Npm latest version`
+- `MongoDB latest version`
+- `Redis client latest version`
+
+## Project Setup Steps ##
+
+### - Common steps ###
+*** NOTE : For this test, no need to follow these steps.
+
+- `Create .json file with node environment name (development.json) in below directories`
+  - `src/v1/config/env/`
+    - `Copy relavant ` sample_* ` file data into *.json` ( * By default sample_docker file content has copied to development.json file )
+  - `src/config/env/`
+    - `Copy` sample `to *.json`
+
+### - Setup in Locally ###
+
+- `If you have not installed NodeJs in your pc, go to this link and follow the instructions` [https://nodejs.org/en/download/releases/](https://nodejs.org/en/download/releases/)
+  - `If you do have Nodejs installed,`
+    - `Check the version. We are using v14.16.1. If your version is not matching, upgrade your node version.`
+    - `Or try to use this module.` [http://nvm.sh](http://nvm.sh)
+- `Create .env file in root directory`
   - `To run the project in local >> copy` local_env `to .env`
 - `Create .json file with node environment name (development.json) in below directories`
   - `src/v1/config/env/`
-    - `Copy` sample `to *.json`
-  - `src/config/env/`
-    - `Copy` sample `to *.json`
-- `Run 'npm install' or 'npm i'` (within the directory)
-- `To start the project :`
+    - `Copy` sample_local `to above *.json file.`
+- `Run 'npm install' or 'npm i'.` (within the directory)
+- `To start the project;`
   - `In local >> type the command in terminal 'npm start' or 'npm run dev'`
-  - `In docker >> type the command in terminal 'docker-compose up'`
-- `By default, the server will start on port 5000`
+- `By default, the server will start on port 5000.`
 - `To access swagger documentation open` [http://localhost:5000/v1/api-docs/](http://localhost:5000/v1/api-docs/)
 
-### Run tests ###
+### - Setup in Docker ###
 
-- `Run 'npm run test'` (within the directory)
+- `Create .env file in root directory`
+  - `To run the project in docker >> copy` docker_env `to .env`
+- `Create .json file with node environment name (development.json) in below directories`
+  - `src/v1/config/env/`
+    - `Copy` sample_docker `to above *.json file.`
+- `To start the project:`
+  - `In docker >> type the command in terminal 'docker-compose up'`
 
-### Configurations ###
+## Run tests ##
 
-- Database configurations in `./config/database.js`
-- Swagger configuration in `./config/swagger.js`
+- `Run 'npm run test'` (within the root directory)
 
-### Files ###
+## Configurations ##
+
+- Database configurations in `./config/database.js.`
+- Swagger configuration in `./config/swagger.js.`
+
+## Files ##
 
 - `.env` > for environment variables
 
-### Docker ###
+## Docker ##
 
 - Containers :
   - Nodejs server :
@@ -40,7 +68,7 @@ This README document will provide steps to get this application up and running.
     - container name  = `mongo`
     - port            = `27017`
 
-### Third-party libraries and usage ###
+## Third-party libraries and usage ##
 
 #### Dependencies ####
 
