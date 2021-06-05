@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,16 +17,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const GRID_LIST = {
+  'active': { cellHeight : 150, cols: 5 },
+  'inactive': { cellHeight : 250, cols: 3 },
+};
+
 const ImageGridList = (props) => {
   const classes = useStyles();
 
   const handleClick = (event) => {
     if( props.handlePhotoSelect ) props.handlePhotoSelect(event);
-  }
+  };
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={150} className={classes.gridList} cols={5}>
+      <GridList cellHeight={ GRID_LIST[props.displayType].cellHeight } className={classes.gridList} cols={ GRID_LIST[props.displayType].cols }>
         {props.photoList.map((imageItem) => (
           <GridListTile key={imageItem.id} cols={imageItem.cols || 1}>
             { ( props.selection === 'single' && props.selectedPhotos.includes(imageItem.id) ) ? <span className={'selected-image-icon'}><FontAwesomeIcon icon={faCheckCircle} size="lg" /></span> : null}
@@ -37,18 +42,21 @@ const ImageGridList = (props) => {
       </GridList>
     </div>
   );
-}
+};
 
 ImageGridList.defaultProps = {
   selection: 'multiple',
+  displayType: 'active',
   photoList: [],
+  selectedPhotos: [],
 };
 
 ImageGridList.propTypes = {
+  displayType: PropTypes.string,
   handlePhotoSelect: PropTypes.func.isRequired,
   selectedPhotos: PropTypes.array.isRequired,
   photoList: PropTypes.array.isRequired,
   selection: PropTypes.string.isRequired,
-}
+};
 
 export default ImageGridList;

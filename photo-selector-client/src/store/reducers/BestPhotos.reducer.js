@@ -1,4 +1,4 @@
-import { BestPhotosTypes } from "../constants";
+import { BestPhotosTypes } from '../constants';
 
 const initialState = {
   orders: {},

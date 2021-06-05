@@ -7,7 +7,7 @@ function Loading() {
     <>
       <Spinner animation="grow" variant="primary" />
     </>
-  )
+  );
 }
 
-export default Loading
+export default Loading;

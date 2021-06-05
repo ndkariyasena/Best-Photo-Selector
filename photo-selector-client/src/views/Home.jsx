@@ -1,33 +1,23 @@
 /* cSpell:ignore notif */
 import React, { useEffect, useState } from 'react';
 
-import { connect } from "react-redux";
-
-// import { Container, Row, Col, Toast, Button } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 import PropTypes from 'prop-types';
 
-// import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
+import { Grid, Button } from '@material-ui/core';
 
-import history from '../store/history'
+import history from '../store/history';
 
-import Loading from "../components/Loading";
-import PhotoGallery from "../components/PhotoGallery";
-import Notification from "../components/Notification";
+import Loading from '../components/Loading';
+import PhotoGallery from '../components/PhotoGallery';
+import Notification from '../components/Notification';
 
-import { getExistingPhoto } from "../store/actions/PhotoRepo.actions";
-import { savePhotoOrder, isPhotoOrdesAvailableForUser } from "../store/actions/BestPhotos.actions";
-import { getUserDetails, getUserCollectionDetails } from "../store/actions/User.actions";
+import { getExistingPhoto } from '../store/actions/PhotoRepo.actions';
+import { savePhotoOrder, isPhotoOrdesAvailableForUser } from '../store/actions/BestPhotos.actions';
+import { getUserDetails, getUserCollectionDetails } from '../store/actions/User.actions';
 
-import "../assets/styles/home.css";
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     flexGrow: 1,
-//   }
-// }));
+import '../assets/styles/home.css';
 
 
 const Home = (props) => {
@@ -46,38 +36,50 @@ const Home = (props) => {
         await props.getExistingPhoto(collectionId)
           .catch(() => {
             addNotifications('Error', 'Something went wrong! Please try again.');
+            setIsLoading(false);
           });
       };
 
+      /* Get user details */
       const getUserDetails = async () => {
-        /* Get user details */
-        await props.getUserDetails()
-          .then(async user => {
-            /* Check is there any best-photo-order album in server */
-            await props.isPhotoOrdesAvailableForUser(user.id)
-              .then(async isAvailable => {
 
-                /* If album available, redirect to album page */
-                if (isAvailable) {
-                  history.push({ pathname: '/top-photos' }, {
-                    userId: user.id,
-                    collectionId: user.collectionsId,
-                  });
+        if (!props.authUser || Object.keys(props.authUser).length === 0) {
+          await props.getUserDetails()
+            .then(getPhotoGalleryDetails);
 
-                  props.history.go();
+        } else {
+          await getPhotoGalleryDetails(props.authUser)
+            .then(() => { setIsLoading(false); });
+        }
 
-                } else { /* Else get user photo gallery details */
-                  await props.getUserCollectionDetails(user.id)
-                    .then(async (details) => {
-                      /* get photo gallery data */
-                      await getAllPhotos(details.code)
-                        .then(() => { setIsLoading(false); });
-                    });
-                }
+      };
 
-              })
-          })
-      }
+      /* Get photo gallery details */
+      const getPhotoGalleryDetails = async (user = props.authUser) => {
+        /* Check is there any best-photo-order album in server */
+        await props.isPhotoOrdesAvailableForUser(user.id)
+          .then(async isAvailable => {
+
+            /* If album available, redirect to album page */
+            if (isAvailable) {
+              history.push({ pathname: '/top-photos' }, {
+                userId: user.id,
+                collectionId: user.collectionsId,
+              });
+
+              props.history.go();
+
+            } else { /* Else get user photo gallery details */
+              await props.getUserCollectionDetails(user.id)
+                .then(async (details) => {
+                  /* get photo gallery data */
+                  await getAllPhotos(details.code)
+                    .then(() => { setIsLoading(false); });
+                });
+            }
+
+          });
+      };
 
       /* Set loading true */
       setIsLoading(true);
@@ -98,14 +100,14 @@ const Home = (props) => {
       if (!topPhotosList || topPhotosList.length < 9) addNotifications('Error', 'Please select 9 photo');
       else {
 
-        await props.savePhotoOrder({ ...topPhotosList }, props.photoAuth.id)
+        await props.savePhotoOrder({ ...topPhotosList }, props.authUser.id)
           .then(response => {
 
             if (response && response.id) {
 
               /* After save, redirect to album page */
               history.push({ pathname: '/top-photos' }, {
-                userId: props.photoAuth.id,
+                userId: props.authUser.id,
                 orderId: response.id,
                 collectionId: props.collectionDetails.code,
               });
@@ -115,7 +117,7 @@ const Home = (props) => {
             }
             else addNotifications('Error', 'Something went wrong! Please try again.');
           })
-          .catch((err) => { addNotifications('Error', 'Something went wrong! Please try again.') });
+          .catch(() => { addNotifications('Error', 'Something went wrong! Please try again.'); });
 
       }
 
@@ -123,20 +125,20 @@ const Home = (props) => {
       console.log(error);
 
     }
-  }
+  };
 
   /* handle notification popups */
   const closeNotifications = (notifId) => {
     const notif = notifications.filter(item => item.id !== notifId);
     setNotifications(notif);
-  }
+  };
 
   /* Add notifications to notifications array */
   const addNotifications = (head = '', message = '', type = 'error') => {
     const notif = [...notifications];
     notif.push({ head, message, id: new Date().getTime(), type });
     setNotifications(notif);
-  }
+  };
 
   /* handle photo selections from the gallery list */
   const handlePhotoSelect = (event) => {
@@ -162,7 +164,7 @@ const Home = (props) => {
     }
 
     return selectedPhotoCountLabel;
-  }
+  };
 
 
   if (isLoading) {
@@ -170,7 +172,7 @@ const Home = (props) => {
       <div className={'loadingWrapper'}>
         <Loading />
       </div>
-    )
+    );
   }
 
 
@@ -214,26 +216,31 @@ const Home = (props) => {
       </div>
 
     </>
-  )
-}
+  );
+};
 
 Home.defaultProps = {
-  photoAuth: {},
+  authUser: {},
   userPhotos: [],
 };
 
 Home.propTypes = {
-  photoAuth: PropTypes.object.isRequired,
+  history: PropTypes.any.isRequired,
+  authUser: PropTypes.object.isRequired,
+  collectionDetails: PropTypes.object.isRequired,
   userPhotos: PropTypes.array.isRequired,
   getExistingPhoto: PropTypes.func.isRequired,
   savePhotoOrder: PropTypes.func.isRequired,
-}
+  getUserDetails: PropTypes.func.isRequired,
+  getUserCollectionDetails: PropTypes.func.isRequired,
+  isPhotoOrdesAvailableForUser: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   userPhotos: state.PhotoRepo.collection,
-  photoAuth: state.PhotoRepo.author,
+  authUser: state.PhotoRepo.author,
   collectionDetails: state.PhotoRepo.details,
-})
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -242,7 +249,7 @@ const mapDispatchToProps = (dispatch) => {
     getUserDetails: () => dispatch(getUserDetails()),
     getUserCollectionDetails: (userId) => dispatch(getUserCollectionDetails(userId)),
     isPhotoOrdesAvailableForUser: (userId) => dispatch(isPhotoOrdesAvailableForUser(userId)),
-  }
-}
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

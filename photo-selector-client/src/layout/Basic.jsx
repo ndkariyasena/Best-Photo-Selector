@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
 
+import { connect } from 'react-redux';
+
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,13 +9,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import Avatar from '@material-ui/core/Avatar';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
@@ -38,7 +38,11 @@ const Basic = (props) => {
                 aria-haspopup="true"
                 color="inherit"
               >
-                <AccountCircle />
+                {
+                  props.authUser && props.authUser.picture ?
+                    <Avatar alt={props.authUser.name} src={props.authUser.picture} /> :
+                    <AccountCircle />
+                }
               </IconButton>
             </div>
           </Toolbar>
@@ -47,13 +51,19 @@ const Basic = (props) => {
       {props.children}
     </>
   );
-}
+};
 
 
 Basic.propTypes = {
-  component: PropTypes.elementType,
-  location: PropTypes.object,
+  authUser: PropTypes.object,
+  children: PropTypes.any,
 };
 
-export default Basic;
+const mapStateToProps = (state) => ({
+  authUser: state.PhotoRepo.author,
+});
+
+const mapDispatchToProps = null;
+
+export default connect(mapStateToProps, mapDispatchToProps)(Basic);
 

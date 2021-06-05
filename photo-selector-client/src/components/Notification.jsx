@@ -25,7 +25,7 @@ const Notification = (props) => {
         ))
       }
     </div>
-  )
+  );
 };
 
 Notification.defaultProps = {
@@ -35,7 +35,7 @@ Notification.defaultProps = {
 Notification.propTypes = {
   notifications: PropTypes.array.isRequired,
   closeNotifications: PropTypes.func.isRequired,
-}
+};
 
-export default Notification
+export default Notification;
 

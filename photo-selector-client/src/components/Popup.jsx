@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 
 import { Container, Row, Col, Image, Button, Modal } from 'react-bootstrap';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 export const Popup = (props) => {
 
@@ -18,12 +18,12 @@ export const Popup = (props) => {
       setSelectedImage(event.target.id);
       setDisableSave(false);
     }
-  }
+  };
 
   const callUpdateOrder = () => {
     setDisableSave(true);
-    props.updateExistingOrder(selectedImage)
-  }
+    props.updateExistingOrder(selectedImage);
+  };
 
   const photoGalleryGenerator = () => {
     try {
@@ -78,7 +78,7 @@ export const Popup = (props) => {
       console.log(error);
       return [];
     }
-  }
+  };
 
   return (
     <>
@@ -91,7 +91,7 @@ export const Popup = (props) => {
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
             Select image
-        </Modal.Title>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Container>
@@ -106,8 +106,8 @@ export const Popup = (props) => {
         </Modal.Footer>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 Popup.propTypes = {
   updateExistingOrder: PropTypes.func.isRequired,
@@ -115,6 +115,6 @@ Popup.propTypes = {
   userPhotos: PropTypes.array.isRequired,
   imageId: PropTypes.string.isRequired,
   activeOrderId: PropTypes.string.isRequired,
-}
+};
 
 export default Popup;
