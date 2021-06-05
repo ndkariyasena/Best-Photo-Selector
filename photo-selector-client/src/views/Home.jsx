@@ -3,34 +3,87 @@ import React, { useEffect, useState } from 'react';
 
 import { connect } from "react-redux";
 
-import { Container, Row, Col, Image, Toast, Button } from 'react-bootstrap';
+// import { Container, Row, Col, Toast, Button } from 'react-bootstrap';
 
 import PropTypes from 'prop-types';
 
+// import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
 import history from '../store/history'
 
+import Loading from "../components/Loading";
+import PhotoGallery from "../components/PhotoGallery";
+import Notification from "../components/Notification";
+
 import { getExistingPhoto } from "../store/actions/PhotoRepo.actions";
-import { savePhotoOrder } from "../store/actions/BestPhotos.actions";
+import { savePhotoOrder, isPhotoOrdesAvailableForUser } from "../store/actions/BestPhotos.actions";
+import { getUserDetails, getUserCollectionDetails } from "../store/actions/User.actions";
 
 import "../assets/styles/home.css";
+
+// const useStyles = makeStyles((theme) => ({
+//   root: {
+//     flexGrow: 1,
+//   }
+// }));
+
 
 const Home = (props) => {
 
   const [topPhotosList, setTopPhotosList] = useState([]);
   const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
+  /* Run at the page load */
   useEffect(() => {
 
     try {
 
-      const getAllPhotos = async () => {
-        await props.getExistingPhoto()
+      /* Get all gallery images */
+      const getAllPhotos = async (collectionId) => {
+        await props.getExistingPhoto(collectionId)
           .catch(() => {
             addNotifications('Error', 'Something went wrong! Please try again.');
           });
       };
 
-      getAllPhotos();
+      const getUserDetails = async () => {
+        /* Get user details */
+        await props.getUserDetails()
+          .then(async user => {
+            /* Check is there any best-photo-order album in server */
+            await props.isPhotoOrdesAvailableForUser(user.id)
+              .then(async isAvailable => {
+
+                /* If album available, redirect to album page */
+                if (isAvailable) {
+                  history.push({ pathname: '/top-photos' }, {
+                    userId: user.id,
+                    collectionId: user.collectionsId,
+                  });
+
+                  props.history.go();
+
+                } else { /* Else get user photo gallery details */
+                  await props.getUserCollectionDetails(user.id)
+                    .then(async (details) => {
+                      /* get photo gallery data */
+                      await getAllPhotos(details.code)
+                        .then(() => { setIsLoading(false); });
+                    });
+                }
+
+              })
+          })
+      }
+
+      /* Set loading true */
+      setIsLoading(true);
+
+      /* Get data */
+      getUserDetails();
 
     } catch (error) {
       console.log(error);
@@ -38,6 +91,7 @@ const Home = (props) => {
 
   }, []);
 
+  /* Handle selected photos from gallery as a new best-photos-order */
   const handleSelectedPhotosSave = async () => {
     try {
 
@@ -49,9 +103,11 @@ const Home = (props) => {
 
             if (response && response.id) {
 
+              /* After save, redirect to album page */
               history.push({ pathname: '/top-photos' }, {
                 userId: props.photoAuth.id,
-                orderId: response.id
+                orderId: response.id,
+                collectionId: props.collectionDetails.code,
               });
 
               props.history.go();
@@ -69,17 +125,20 @@ const Home = (props) => {
     }
   }
 
+  /* handle notification popups */
   const closeNotifications = (notifId) => {
     const notif = notifications.filter(item => item.id !== notifId);
     setNotifications(notif);
   }
 
-  const addNotifications = (head = '', message = '') => {
+  /* Add notifications to notifications array */
+  const addNotifications = (head = '', message = '', type = 'error') => {
     const notif = [...notifications];
-    notif.push({ head, message, id: new Date().getTime() });
+    notif.push({ head, message, id: new Date().getTime(), type });
     setNotifications(notif);
   }
 
+  /* handle photo selections from the gallery list */
   const handlePhotoSelect = (event) => {
 
     const selectedImageId = Number(event.target.id);
@@ -92,57 +151,7 @@ const Home = (props) => {
     setTopPhotosList(photosList);
   };
 
-  const photoGalleryGenerator = () => {
-    try {
-
-      const outPut = [];
-      const userPhotos = [...props.userPhotos];
-
-      if (userPhotos && userPhotos.length > 0) {
-
-        const numberOfPhotos = userPhotos.length;
-        const photosPerRow = Math.floor(numberOfPhotos / 4);
-
-        for (let index = 0; index < numberOfPhotos; index += photosPerRow) {
-
-          const images = [];
-
-          for (let point = index; point < (photosPerRow + index); point++) {
-
-            if (!userPhotos[point]) break;
-
-            const item = userPhotos[point];
-
-            let classesList = 'effects';
-            classesList += topPhotosList.includes(item.id) ? ' selected-image' : '';
-
-            const keyValue = topPhotosList.includes(item.id) ? (item.id + '_selected') : item.id;
-
-            images.push(
-              <div className={'position-relative'} key={point}>
-                {topPhotosList.includes(item.id) ? <span className={'selected-image-number'}>{topPhotosList.indexOf(item.id) + 1}</span> : null}
-                <Image alt={'...image'} key={keyValue} id={item.id} src={item.picture} thumbnail className={classesList} onClick={handlePhotoSelect} />
-              </div>
-            );
-
-          }
-
-          outPut.push(
-            <Col xs={12} sm={12} md={3} lg={3} key={index} >{images}</Col>
-          );
-
-        }
-
-      }
-
-      return outPut;
-
-    } catch (error) {
-      console.log(error);
-      return [];
-    }
-  }
-
+  /* Display number of images selected */
   const selectedLabel = () => {
 
     let selectedPhotoCountLabel = <p> </p>;
@@ -156,48 +165,53 @@ const Home = (props) => {
   }
 
 
+  if (isLoading) {
+    return (
+      <div className={'loadingWrapper'}>
+        <Loading />
+      </div>
+    )
+  }
+
 
   return (
     <>
 
-      {
-        notifications.length > 0 && (
-          <div aria-live="polite" aria-atomic="true" className={'notifications-wrapper'} >
-            <div className={'notifications'} >
-              {
-                notifications.map((item) => (
-                  <Toast className="toast-notify" key={item.id} onClose={() => closeNotifications(item.id)}>
-                    <Toast.Header>
-                      <strong className="mr-auto">{item.head}</strong>
-                    </Toast.Header>
-                    <Toast.Body>{item.message}</Toast.Body>
-                  </Toast>
-                ))
-              }
+      <Notification notifications={notifications} closeNotifications={closeNotifications} />
+
+      <div >
+        <Grid container spacing={3}>
+
+          {/* Header */}
+          <Grid item xs={12}>
+            <div className="header">
+              <h1>Photo Gallery</h1>
+              <p>Select your best 9 photos.</p>
             </div>
-          </div>
-        )
-      }
+          </Grid>
 
-      <div className="header">
-        <h1>Photo Gallery</h1>
-        <p>Select your best 9 photos.</p>
+          {/* Info and buttons section */}
+          <Grid item xs={null} sm={1} />
+          <Grid item xs={12} sm={9}>
+            {selectedLabel()}
+          </Grid>
+          <Grid item xs={12} sm={1}>
+            <Button className="margin-bottom-10 button-basic" onClick={handleSelectedPhotosSave} disabled={topPhotosList.length === 0} >Save</Button>
+          </Grid>
+          <Grid item xs={null} sm={1} />
+
+          {/* Photo display grids */}
+          <Grid item xs={null} sm={1} />
+          <Grid item xs={12} sm={10} spacing={3} className={'fix-box'}>
+            <PhotoGallery photoList={props.userPhotos} handlePhotoSelect={handlePhotoSelect} selectedPhotos={topPhotosList} selection={'multiple'} />
+          </Grid>
+          <Grid item xs={null} sm={1} />
+
+          {/* Empty space */}
+          <Grid item xs={12} sm={12} />
+
+        </Grid>
       </div>
-
-      <div>
-        <Container>
-          <Row>
-            <Col sm={6} md={11}>{selectedLabel()}</Col>
-            <Col sm={6} md={1}>{topPhotosList.length > 0 ? <Button onClick={handleSelectedPhotosSave} >Save</Button> : null}</Col>
-          </Row>
-        </Container>
-      </div>
-
-      <Container>
-        <Row>
-          {photoGalleryGenerator()}
-        </Row>
-      </Container>
 
     </>
   )
@@ -218,12 +232,16 @@ Home.propTypes = {
 const mapStateToProps = (state) => ({
   userPhotos: state.PhotoRepo.collection,
   photoAuth: state.PhotoRepo.author,
+  collectionDetails: state.PhotoRepo.details,
 })
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getExistingPhoto: () => dispatch(getExistingPhoto()),
+    getExistingPhoto: (collectionId) => dispatch(getExistingPhoto(collectionId)),
     savePhotoOrder: (photoOrder, userId) => dispatch(savePhotoOrder(photoOrder, userId)),
+    getUserDetails: () => dispatch(getUserDetails()),
+    getUserCollectionDetails: (userId) => dispatch(getUserCollectionDetails(userId)),
+    isPhotoOrdesAvailableForUser: (userId) => dispatch(isPhotoOrdesAvailableForUser(userId)),
   }
 }
 

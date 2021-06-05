@@ -8,6 +8,7 @@ import routes from "./routes";
 
 import LoadingView from "./components/Loading";
 
+import "./assets/styles/common.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App(props) {

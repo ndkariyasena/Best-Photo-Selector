@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Home from "./views/HomeNew.jsx";
+import Home from "./views/Home.jsx";
 
 const TopPhotos = React.lazy(() => import('./views/PhotoAlbum.jsx'));
 

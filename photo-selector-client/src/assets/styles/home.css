@@ -124,6 +124,11 @@ body {
   margin-bottom: 10%;
 }
 
+.fix-box {
+  height: 500px;
+  overflow-y: scroll;
+}
+
 /* Responsive layout - makes a two column-layout instead of four columns */
 @media screen and (max-width: 800px) {
   .column {

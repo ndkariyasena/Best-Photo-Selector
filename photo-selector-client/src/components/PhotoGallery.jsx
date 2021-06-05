@@ -26,18 +26,23 @@ const ImageGridList = (props) => {
 
   return (
     <div className={classes.root}>
-      <GridList cellHeight={250} className={classes.gridList} cols={3}>
+      <GridList cellHeight={150} className={classes.gridList} cols={5}>
         {props.photoList.map((imageItem) => (
           <GridListTile key={imageItem.id} cols={imageItem.cols || 1}>
             { ( props.selection === 'single' && props.selectedPhotos.includes(imageItem.id) ) ? <span className={'selected-image-icon'}><FontAwesomeIcon icon={faCheckCircle} size="lg" /></span> : null}
             { ( props.selection === 'multiple' && props.selectedPhotos.includes(imageItem.id) ) ? <span className={'selected-image-number'}>{props.selectedPhotos.indexOf(imageItem.id) + 1}</span> : null}
-            <img src={imageItem.picture} alt={imageItem.title} id={imageItem.id} onClick={handleClick} />
+            <img src={imageItem.picture} alt={imageItem.title} id={imageItem.id} onClick={handleClick} className={'full-height-images'} />
           </GridListTile>
         ))}
       </GridList>
     </div>
   );
 }
+
+ImageGridList.defaultProps = {
+  selection: 'multiple',
+  photoList: [],
+};
 
 ImageGridList.propTypes = {
   handlePhotoSelect: PropTypes.func.isRequired,
