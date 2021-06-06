@@ -1,24 +1,24 @@
 import React from 'react';
 
-import Home from "./views/HomeNew.jsx";
+import Home from './views/Home.jsx';
 
 const TopPhotos = React.lazy(() => import('./views/PhotoAlbum.jsx'));
 
 const routes = [
   {
-    path: "/top-photos",
-    name: "Icons",
-    icon: "nc-icon nc-diamond",
+    path: '/top-photos',
+    name: 'Icons',
+    icon: 'nc-icon nc-diamond',
     exact: true,
     component: TopPhotos,
-    layout: "/"
+    layout: '/'
   },
   {
-    path: "",
-    name: "Dashboard",
-    icon: "nc-icon nc-bank",
+    path: '',
+    name: 'Dashboard',
+    icon: 'nc-icon nc-bank',
     component: Home,
-    layout: "/"
+    layout: '/'
   },
 ];
 

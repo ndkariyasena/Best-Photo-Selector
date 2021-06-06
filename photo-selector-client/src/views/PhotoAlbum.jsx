@@ -1,27 +1,30 @@
 /* cSpell:ignore notif */
 import React, { useEffect, useState } from 'react';
 
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { Container, Row, Col, Button} from 'react-bootstrap';
+import { Grid, Button } from '@material-ui/core';
 
-import PhotoGallery from "../components/PhotoGallery";
-import ChangeOrder from "../components/ChangeOrder";
+import Loading from '../components/Loading';
+import PhotoGallery from '../components/PhotoGallery';
+import ChangeOrder from '../components/ChangeOrder';
+// import Notification from '../components/Notification';
 
-import { getExistingPhoto } from "../store/actions/PhotoRepo.actions";
-import { updatePhotoOrder, getAllBestPhotoOrderForUser } from "../store/actions/BestPhotos.actions";
-import { getUserDetails } from "../store/actions/User.actions";
+import { getExistingPhoto } from '../store/actions/PhotoRepo.actions';
+import { updatePhotoOrder, getAllBestPhotoOrderForUser } from '../store/actions/BestPhotos.actions';
+import { getUserDetails } from '../store/actions/User.actions';
+import { addNotification } from '../store/actions/Notification.actions';
 
-import "../assets/styles/home.css";
-import "../assets/styles/topPhotos.css";
+import '../assets/styles/home.css';
+import '../assets/styles/topPhotos.css';
 
 function PhotoAlbum(props) {
 
   const [authUserId, setUserId] = useState(null);
   const [activeOrderId, setActiveOrderId] = useState(null);
-  const [notifications, setNotifications] = useState([]);
   const [changeOrder, setChangeOrder] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const historyLocation = { ...props.history.location };
 
@@ -40,7 +43,7 @@ function PhotoAlbum(props) {
       if (historyLocation.state && historyLocation.state.collectionsId) collectionsId = historyLocation.state.collectionsId;
 
       if (historyLocation.state && historyLocation.state.userId) userId = historyLocation.state.userId;
-      else if (props.photoAuth.id) userId = props.photoAuth.id;
+      else if (props.authUser.id) userId = props.authUser.id;
 
       if (userId) setUserId(userId);
       if (orderId) setActiveOrderId(orderId);
@@ -61,7 +64,7 @@ function PhotoAlbum(props) {
 
                 if (!orderId && Object.keys(photoOrders).length > 0) {
                   const _order = photoOrders[Object.keys(photoOrders)[0]];
-                  console.log(_order)
+                  console.log(_order);
                   setActiveOrderId(_order.id);
                 }
 
@@ -69,7 +72,8 @@ function PhotoAlbum(props) {
           })
           .catch(() => {
             addNotifications('Error', 'Something went wrong! Please try again.');
-          });
+          })
+          .finally(() => { setIsLoading(false); });
       };
 
       const getAllDetails = async () => {
@@ -81,10 +85,14 @@ function PhotoAlbum(props) {
 
             // generateImageAlbumData();
           })
-      }
+          .finally(() => { setIsLoading(false); });
+      };
+
+      /* Set loading true */
+      setIsLoading(true);
 
       /* If collectionId not available, get user details and other data */
-      if (!collectionsId) getAllDetails()
+      if (!collectionsId) getAllDetails();
       else getAllPhotosAndPhotoOrders(); /* Else get gallery photos and album data */
 
     } catch (error) {
@@ -96,7 +104,7 @@ function PhotoAlbum(props) {
   const generateImageAlbumData = () => {
     try {
 
-      let imageAlbum = [];
+      const imageAlbum = [];
 
       const userPhotos = [...props.userPhotos];
       const bestPhotosOrder = props.bestPhotosOrders[activeOrderId].order;
@@ -111,25 +119,21 @@ function PhotoAlbum(props) {
         }
       }
 
-      // setPhotoOrder(imageAlbum);
-
       return imageAlbum;
 
     } catch (error) {
       return [];
     }
-  }
+  };
 
   /* Add notifications to notifications array */
-  const addNotifications = (head = '', message = '') => {
-    const notif = [...notifications];
-    notif.push({ head, message, id: new Date().getTime() });
-    setNotifications(notif);
-  }
+  const addNotifications = (head = '', message = '', type = 'error') => {
+    props.addNotification({ head, message, type });
+  };
 
   const updateFullOrder = async (newPhotoOrder) => {
 
-    let changedOrder = newPhotoOrder.map((item) => (Number(item.id)));
+    const changedOrder = newPhotoOrder.map((item) => (Number(item.id)));
 
     await props.updatePhotoOrder({ ...changedOrder }, authUserId, activeOrderId)
       .catch(() => {
@@ -139,68 +143,91 @@ function PhotoAlbum(props) {
         props.history.go();
       });
 
-  }
+  };
 
   const handleChangeOrder = () => {
     setChangeOrder(!changeOrder);
+  };
+
+
+  if (isLoading) {
+    return (
+      <div className={'loadingWrapper'}>
+        <Loading />
+      </div>
+    );
   }
 
   return (
     <>
-      <div className="header">
-        <h1>Your Best Selections</h1>
-      </div>
-
-      <div className="spacing-bottom-25">
-        <Container>
-          <Row>
-            <Col sm={6} md={10}></Col>
-            <Col sm={6} md={2}>
-              {
-                activeOrderId &&
-                <Button size="sm" variant="primary" onClick={handleChangeOrder} >
-                  Change the order
-                </Button>
-              }
-            </Col>
-          </Row>
-        </Container>
-      </div>
 
       {
         changeOrder && (
           <ChangeOrder photoList={generateImageAlbumData()} open={changeOrder} onClose={handleChangeOrder} updateExistingOrder={updateFullOrder} />)
       }
 
-      <Container className="spacing-bottom-50">
-        <Row>
-          <PhotoGallery photoList={generateImageAlbumData()} />
-        </Row>
-      </Container>
+      <div >
+        <Grid container spacing={3}>
+
+          {/* Header */}
+          <Grid item xs={12}>
+            <div className="header">
+              <h1>Your Best Selections</h1>
+            </div>
+          </Grid>
+
+          {/* Info and buttons section */}
+          <Grid item xs={null} sm={9} />
+          <Grid item xs={12} sm={2}>
+            {
+              activeOrderId &&
+              (<Button className="margin-bottom-10 button-basic" size="sm" variant="primary" onClick={handleChangeOrder} >
+                Change the order
+              </Button>)
+            }
+          </Grid>
+          <Grid item xs={null} sm={1} />
+
+          {/* Photo display grids */}
+          <Grid item xs={null} sm={1} />
+          <Grid item xs={12} sm={10} spacing={3}>
+            <PhotoGallery photoList={generateImageAlbumData()} displayType={'inactive'} />
+          </Grid>
+          <Grid item xs={null} sm={1} />
+
+          {/* Empty space */}
+          <Grid item xs={12} sm={12} />
+
+        </Grid>
+      </div>
+
     </>
-  )
+  );
 }
 
 PhotoAlbum.defaultProps = {
-  photoAuth: {},
+  authUser: {},
   bestPhotosOrders: {},
   userPhotos: [],
 };
 
 PhotoAlbum.propTypes = {
   history: PropTypes.object.isRequired,
-  photoAuth: PropTypes.object.isRequired,
+  authUser: PropTypes.object.isRequired,
   bestPhotosOrders: PropTypes.object.isRequired,
   userPhotos: PropTypes.array.isRequired,
   getExistingPhoto: PropTypes.func.isRequired,
   updatePhotoOrder: PropTypes.func.isRequired,
-}
+  getAllBestPhotoOrderForUser: PropTypes.func.isRequired,
+  getUserDetails: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state) => ({
   userPhotos: state.PhotoRepo.collection,
-  photoAuth: state.PhotoRepo.author,
+  authUser: state.PhotoRepo.author,
   bestPhotosOrders: state.BestPhotos.orders,
-})
+});
 
 const mapDispatchToProps = (dispatch) => {
   return {
@@ -208,7 +235,8 @@ const mapDispatchToProps = (dispatch) => {
     updatePhotoOrder: (photoOrder, userId, orderId) => dispatch(updatePhotoOrder(photoOrder, userId, orderId)),
     getAllBestPhotoOrderForUser: (userId) => dispatch(getAllBestPhotoOrderForUser(userId)),
     getUserDetails: () => dispatch(getUserDetails()),
-  }
-}
+    addNotification: (notification) => dispatch(addNotification(notification)),
+  };
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(PhotoAlbum);

@@ -1,6 +1,6 @@
 /* cSpell:ignore signin */
 
-import { PhotoRepoTypes, UserTypes } from "../constants";
+import { PhotoRepoTypes, UserTypes } from '../constants';
 
 const initialState = {
   author: {},
@@ -17,6 +17,7 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: PhotoRepoTypes.GET_EXISTING_PHOTOS,
       };
 
       if( action.payload.photos ) {
@@ -39,9 +40,10 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: PhotoRepoTypes.GET_USER_DETAILS,
       };
 
-      if( action.payload.photos ) {
+      if( action.payload.user ) {
 
         const user = { ...action.payload.user };
 
@@ -59,9 +61,10 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: PhotoRepoTypes.GET_USER_COLLECTIONS_DETAILS,
       };
 
-      if( action.payload.photos ) {
+      if( action.payload.details ) {
 
         const details = { ...action.payload.details };
 

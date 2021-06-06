@@ -1,9 +1,10 @@
-import { BestPhotosTypes } from "../constants";
+import { BestPhotosTypes } from '../constants';
 
 const initialState = {
   orders: {},
   error: {},
   processStatus: null,
+  processAction: null,
 };
 
 const auth = (state = initialState, action) => {
@@ -13,6 +14,7 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: BestPhotosTypes.SAVE_PHOTO_ORDER,
       };
 
       if( action.payload.order && action.payload.order.id ) {
@@ -31,6 +33,7 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: BestPhotosTypes.GET_PHOTO_ORDER_BY_ID,
       };
 
       if( action.payload.order && action.payload.order.id ) {
@@ -49,6 +52,7 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: BestPhotosTypes.GET_PHOTO_ORDER_FOR_USER,
       };
 
       if( action.payload.orders && action.payload.orders.length > 0 ) {
@@ -68,6 +72,7 @@ const auth = (state = initialState, action) => {
 
       const updates = {
         processStatus: (action.payload.status) ? action.payload.status : null,
+        processAction: BestPhotosTypes.UPDATE_PHOTO_ORDER,
       };
 
       if( action.payload.order && action.payload.order.id ) {

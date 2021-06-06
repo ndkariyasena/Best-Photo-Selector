@@ -4,11 +4,11 @@ import thunk from 'redux-thunk';
 
 import { composeWithDevTools } from 'redux-devtools-extension';
 
-import monitorReducerEnhancer from "./support/enhancers/monitorReducer";
+import monitorReducerEnhancer from './support/enhancers/monitorReducer';
 
-import logger from "./support/middleware/logger";
+import logger from './support/middleware/logger';
 
-import rootReducer from "./reducers";
+import rootReducer from './reducers';
 
 import history from './history';
 

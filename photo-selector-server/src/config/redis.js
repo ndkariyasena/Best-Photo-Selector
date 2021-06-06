@@ -11,14 +11,11 @@ let redisClient = null;
 const createRedisClient = (option = {}) => {
 
   try {
-    console.log('1 ', option)
 
     if (redisClient) return redisClient;
 
-    if ( Object.keys(option).length === 0 ) throw ('Redis configs are empty');
-    console.log('2 ', option)
+    // if ( Object.keys(option).length === 0 ) throw ('Redis configs are empty');
 
-    // redisClient = Redis.createClient('redis://redis:6380');
     redisClient = Redis.createClient(option);
 
     redisClient.on('connect', () => console.log(`Redis client running on ${option.host ? option.host : Default_host}:${option.port ? option.port : Default_port}`));

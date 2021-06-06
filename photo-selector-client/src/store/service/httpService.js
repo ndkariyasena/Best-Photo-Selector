@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 const handleErrors = (response) => {
 
   if (response.errorMessage) throw response;
@@ -18,27 +19,21 @@ export const httpService = {
 
     return new Promise(async (resolve, reject) => {
 
-      try {
+      const settings = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      };
 
-        const settings = {
-          method: 'GET',
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-        };
+      if (params && params.skipHeaders) delete settings.headers;
 
-        if (params && params.skipHeaders) delete settings.headers;
-
-        return await fetch(params.url, settings)
-          .then(response => response.json())
-          .then(response => { resolve(response); })
-          .then(handleErrors)
-          .catch(err => reject(err));
-
-      } catch (error) {
-        throw error;
-      }
+      return await fetch(params.url, settings)
+        .then(response => response.json())
+        .then(response => { resolve(response); })
+        .then(handleErrors)
+        .catch(err => reject(err));
 
     });
 
@@ -111,19 +106,19 @@ export const httpService = {
   /* TODO : query data handling */
   _utils: {
 
-    encodeQueryData: (data) => {
+    // encodeQueryData: (data) => {
 
-    },
+    // },
 
-    addQueryParams: (data) => {
-
-
-    },
-
-    updateQueryStringParameter: (uri, key, value) => {
+    // addQueryParams: (data) => {
 
 
-    }
+    // },
+
+    // updateQueryStringParameter: (uri, key, value) => {
+
+
+    // }
 
   }
 

@@ -20,6 +20,14 @@ const logger = new createLogger({
   ),
 });
 
+// logger.setLevels({
+//   debug:0,
+//   info: 1,
+//   silly:2,
+//   warn: 3,
+//   error:4,
+// });
+
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new transports.Console({
     format: format.combine(

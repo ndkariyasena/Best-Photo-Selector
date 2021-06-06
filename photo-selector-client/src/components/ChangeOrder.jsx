@@ -14,7 +14,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 
-import "../assets/styles/changeOrder.css";
+import '../assets/styles/changeOrder.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +25,11 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
+  selectorWrapper: {
+    position: 'absolute',
+    top: '1rem',
+    right: '1rem',
+  }
 }));
 
 const BootstrapInput = withStyles((theme) => ({
@@ -91,7 +96,7 @@ const ChangeOrder = (props) => {
     }
 
 
-  }
+  };
 
   return (
     <>
@@ -109,11 +114,11 @@ const ChangeOrder = (props) => {
             <Grid container>
               {
                 photoAlbum.map((item, index) => (
-                  <Grid item xs={4}>
+                  <Grid item xs={4} key={index}>
                     <div className="relative-position">
-                      <FormControl className={'drop-down'}>
+                      <FormControl className={'drop-down ' + classes.selectorWrapper}>
                         <Select
-                          labelId="demo-customized-select-label"
+                          labelId="customized-select-label"
                           key={item.id}
                           id={`${item.id}_${index}`}
                           name={`${item.id}_${index}`}
@@ -121,7 +126,7 @@ const ChangeOrder = (props) => {
                           onChange={handleChange}
                           input={<BootstrapInput />}
                         >
-                          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i) => (<MenuItem value={i}>{i + 1}</MenuItem>))}
+                          {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((i, j) => (<MenuItem key={`${i}_${j}`} value={i}>{i + 1}</MenuItem>))}
                         </Select>
                       </FormControl>
                     </div>
@@ -144,7 +149,7 @@ const ChangeOrder = (props) => {
       </Dialog>
     </>
   );
-}
+};
 
 ChangeOrder.defaultProps = {
   selectedPhotos: [],
@@ -152,10 +157,11 @@ ChangeOrder.defaultProps = {
 };
 
 ChangeOrder.propTypes = {
+  onClose: PropTypes.func.isRequired,
   updateExistingOrder: PropTypes.func.isRequired,
   selectedPhotos: PropTypes.array.isRequired,
   photoList: PropTypes.array.isRequired,
-  // selection: PropTypes.string.isRequired,
-}
+  open: PropTypes.bool.isRequired,
+};
 
 export default ChangeOrder;
