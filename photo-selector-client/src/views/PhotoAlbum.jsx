@@ -9,11 +9,12 @@ import { Grid, Button } from '@material-ui/core';
 import Loading from '../components/Loading';
 import PhotoGallery from '../components/PhotoGallery';
 import ChangeOrder from '../components/ChangeOrder';
-import Notification from '../components/Notification';
+// import Notification from '../components/Notification';
 
 import { getExistingPhoto } from '../store/actions/PhotoRepo.actions';
 import { updatePhotoOrder, getAllBestPhotoOrderForUser } from '../store/actions/BestPhotos.actions';
 import { getUserDetails } from '../store/actions/User.actions';
+import { addNotification } from '../store/actions/Notification.actions';
 
 import '../assets/styles/home.css';
 import '../assets/styles/topPhotos.css';
@@ -22,7 +23,6 @@ function PhotoAlbum(props) {
 
   const [authUserId, setUserId] = useState(null);
   const [activeOrderId, setActiveOrderId] = useState(null);
-  const [notifications, setNotifications] = useState([]);
   const [changeOrder, setChangeOrder] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -119,8 +119,6 @@ function PhotoAlbum(props) {
         }
       }
 
-      // setPhotoOrder(imageAlbum);
-
       return imageAlbum;
 
     } catch (error) {
@@ -129,16 +127,8 @@ function PhotoAlbum(props) {
   };
 
   /* Add notifications to notifications array */
-  const addNotifications = (head = '', message = '') => {
-    const notif = [...notifications];
-    notif.push({ head, message, id: new Date().getTime() });
-    setNotifications(notif);
-  };
-
-  /* handle notification popups */
-  const closeNotifications = (notifId) => {
-    const notif = notifications.filter(item => item.id !== notifId);
-    setNotifications(notif);
+  const addNotifications = (head = '', message = '', type = 'error') => {
+    props.addNotification({ head, message, type });
   };
 
   const updateFullOrder = async (newPhotoOrder) => {
@@ -170,8 +160,6 @@ function PhotoAlbum(props) {
 
   return (
     <>
-
-      <Notification notifications={notifications} closeNotifications={closeNotifications} />
 
       {
         changeOrder && (
@@ -232,6 +220,7 @@ PhotoAlbum.propTypes = {
   updatePhotoOrder: PropTypes.func.isRequired,
   getAllBestPhotoOrderForUser: PropTypes.func.isRequired,
   getUserDetails: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -246,6 +235,7 @@ const mapDispatchToProps = (dispatch) => {
     updatePhotoOrder: (photoOrder, userId, orderId) => dispatch(updatePhotoOrder(photoOrder, userId, orderId)),
     getAllBestPhotoOrderForUser: (userId) => dispatch(getAllBestPhotoOrderForUser(userId)),
     getUserDetails: () => dispatch(getUserDetails()),
+    addNotification: (notification) => dispatch(addNotification(notification)),
   };
 };
 

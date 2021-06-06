@@ -11,11 +11,11 @@ import history from '../store/history';
 
 import Loading from '../components/Loading';
 import PhotoGallery from '../components/PhotoGallery';
-import Notification from '../components/Notification';
 
 import { getExistingPhoto } from '../store/actions/PhotoRepo.actions';
 import { savePhotoOrder, isPhotoOrdesAvailableForUser } from '../store/actions/BestPhotos.actions';
 import { getUserDetails, getUserCollectionDetails } from '../store/actions/User.actions';
+import { addNotification } from '../store/actions/Notification.actions';
 
 import '../assets/styles/home.css';
 
@@ -23,7 +23,6 @@ import '../assets/styles/home.css';
 const Home = (props) => {
 
   const [topPhotosList, setTopPhotosList] = useState([]);
-  const [notifications, setNotifications] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   /* Run at the page load */
@@ -127,17 +126,9 @@ const Home = (props) => {
     }
   };
 
-  /* handle notification popups */
-  const closeNotifications = (notifId) => {
-    const notif = notifications.filter(item => item.id !== notifId);
-    setNotifications(notif);
-  };
-
   /* Add notifications to notifications array */
   const addNotifications = (head = '', message = '', type = 'error') => {
-    const notif = [...notifications];
-    notif.push({ head, message, id: new Date().getTime(), type });
-    setNotifications(notif);
+    props.addNotification({ head, message, type });
   };
 
   /* handle photo selections from the gallery list */
@@ -178,8 +169,6 @@ const Home = (props) => {
 
   return (
     <>
-
-      <Notification notifications={notifications} closeNotifications={closeNotifications} />
 
       <div >
         <Grid container spacing={3}>
@@ -234,6 +223,7 @@ Home.propTypes = {
   getUserDetails: PropTypes.func.isRequired,
   getUserCollectionDetails: PropTypes.func.isRequired,
   isPhotoOrdesAvailableForUser: PropTypes.func.isRequired,
+  addNotification: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -249,6 +239,7 @@ const mapDispatchToProps = (dispatch) => {
     getUserDetails: () => dispatch(getUserDetails()),
     getUserCollectionDetails: (userId) => dispatch(getUserCollectionDetails(userId)),
     isPhotoOrdesAvailableForUser: (userId) => dispatch(isPhotoOrdesAvailableForUser(userId)),
+    addNotification: (notification) => dispatch(addNotification(notification)),
   };
 };
 

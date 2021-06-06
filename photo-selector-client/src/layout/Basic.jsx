@@ -11,6 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Avatar from '@material-ui/core/Avatar';
 
+import Notification from '../components/Notification';
+
 const useStyles = makeStyles(() => ({
   root: {
     flexGrow: 1,
@@ -25,6 +27,8 @@ const Basic = (props) => {
 
   return (
     <>
+      <Notification />
+
       <div className={classes.root}>
         <AppBar position="static">
           <Toolbar>
