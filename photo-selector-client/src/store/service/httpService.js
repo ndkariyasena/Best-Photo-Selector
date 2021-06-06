@@ -1,3 +1,4 @@
+/* eslint-disable no-async-promise-executor */
 const handleErrors = (response) => {
 
   if (response.errorMessage) throw response;
