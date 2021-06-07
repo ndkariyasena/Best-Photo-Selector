@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const chalk = require('chalk');
 
-const API_VERSIONS = process.env?.API_VERSIONS;
+const API_VERSIONS = process.env.API_VERSIONS;
 
 const DB_NAMES = API_VERSIONS ? API_VERSIONS.split(' ').map((version) => `${version}_DB_NAME`) : [];
 
