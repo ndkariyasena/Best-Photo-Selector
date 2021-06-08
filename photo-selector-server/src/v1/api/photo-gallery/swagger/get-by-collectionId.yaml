@@ -1,5 +1,5 @@
 paths:
-  /photo-gallery/collection/:collectionId:
+  /photo-gallery/collection/{collectionId}:
     get:
       tags:
         - Photo Gallery
@@ -13,8 +13,6 @@ paths:
           description: The collection ID
           schema:
             type: string
-            example:
-              userId: QDOUgsefgaeWD
       responses:
         200:
           allOf:

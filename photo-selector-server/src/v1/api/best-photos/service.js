@@ -26,7 +26,11 @@ const getBestPhotosOrders = async (userId, orderId) => {
     if( orderId ) query['id'] = orderId;
 
     /* get data and return */
-    return await Database.findByQuery(query);
+    const response = await Database.findByQuery(query);
+
+    if( !response || response.length === 0 ) THROW_ERROR('Data not found for given id', 404);
+
+    return response;
     
   } catch (error) {
     THROW_ERROR(error);

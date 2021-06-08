@@ -1,6 +1,9 @@
 # README #
 This README document will provide steps to get this application up and running.
 
+*** NOTE: Photo gallery data return mock data for this test because of Photo gallery API misbehaving.
+Original code has commented out.
+
 ## Project Requirements ##
 - `NodeJs 14.16.1 or higher`
 - `Npm latest version`
@@ -78,6 +81,9 @@ This README document will provide steps to get this application up and running.
 * `mongoose`            - Mongodb schema solution
 * `swagger-jsdoc`       - Generates swagger doc based on JSDoc
 * `swagger-ui-express`  - Auto-generated swagger-ui
+* `winston`             - Logger module
+* `redis`               - Cacheing module
+* `axios`               - HTTP request module
 
 #### Dev-Dependencies ####
 
@@ -88,7 +94,7 @@ This README document will provide steps to get this application up and running.
 * `supertest`     - Unit testing
 
 #### TODO ####
-* `Unit tests`
+* `Unit test`
 
 #### Areas can improve ####
 * `Typescript integration`

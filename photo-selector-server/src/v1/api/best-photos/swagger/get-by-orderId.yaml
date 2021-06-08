@@ -1,5 +1,5 @@
 paths:
-  /best-photos/order/:orderId:
+  /best-photos/order/{orderId}:
     get:
       tags:
         - Best photos collection
@@ -8,14 +8,12 @@ paths:
         - application/json
       parameters:
         - in: path
-          name: userId
+          name: orderId
           required: true
           description: The order ID
           schema:
             type: integer
             minimum: 3
-            example:
-              userId: 101
       responses:
         200:
           allOf:
@@ -28,5 +26,7 @@ paths:
                     $ref: "#/definitions/best-photos"
         400:
           $ref: "#components/responses/400"
+        404:
+          $ref: "#components/responses/404"
         500:
           $ref: "#components/responses/500"

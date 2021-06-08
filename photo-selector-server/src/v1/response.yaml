@@ -12,6 +12,14 @@ components:
       description: Client Error
       schema:
         $ref: "#/components/responseSchemas/clientError"
+    403:
+      description: Unauthorized Request
+      schema:
+        $ref: "#/components/responseSchemas/Unauthorized"
+    404:
+      description: Data Not Found Error
+      schema:
+        $ref: "#/components/responseSchemas/DataNotFoundError"
     500:
       description: Unexpected Error
       schema:
@@ -98,6 +106,42 @@ components:
         message:
           type: string
           example: "unexpected error occurred"
+        success:
+          type: "boolean"
+          example: false
+    Unauthorized:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 403
+        type:
+          type: string
+          example: DATA_NOT_FOUND
+        code:
+          type: integer
+          example: 403
+        message:
+          type: string
+          example: "Data not found"
+        success:
+          type: "boolean"
+          example: false
+    DataNotFoundError:
+      type: "object"
+      properties:
+        httpCode:
+          type: integer
+          example: 404
+        type:
+          type: string
+          example: Unauthorized
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: "Unauthorized Request"
         success:
           type: "boolean"
           example: false

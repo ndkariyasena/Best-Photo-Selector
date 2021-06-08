@@ -54,6 +54,8 @@ const CUSTOM_CODE = {
 
   _403: (e) => ({ ...HTTP_CODE._403, ..._getError(e) }),
 
+  _404: (e) => ({ ...HTTP_CODE._404, ..._getError(e) }),
+
   _500: (e) => ({ ...HTTP_CODE._500, ..._getError(e) }),
 };
 
@@ -79,6 +81,8 @@ const ERROR = (res, code, err) => {
       if( errorType === '_401' ) response = CUSTOM_CODE._401(err);
       
       if( errorType === '_403' ) response = CUSTOM_CODE._403(err);
+
+      if( errorType === '_404' ) response = CUSTOM_CODE._404(err);
 
     }
 

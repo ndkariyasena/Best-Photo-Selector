@@ -5,7 +5,7 @@ const { Configs } = require('@v1Config');
 
 const { THROW_ERROR } = require('@src/helpers/responseHandlers');
 
-const Axios = require('@v1Modules/requests/axios');
+// const Axios = require('@v1Modules/requests/axios');
 
 const RedisClient = Redis.createRedisClient(Configs.REDIS);
 // const RedisClient = Redis.redisClient;
@@ -59,9 +59,24 @@ const getPhotoCollectionAndCache = async (collectionId = null) => {
 const getPhotoCollection = async (collectionId = null) => {
   try {
 
-    const url = `${Configs.EXTERNAL_URLS.IMAGE_SOURCE_SERVER}/${collectionId}.json`;
+    /* TODO : Uncomment */
+    /* NOTE : Only for the test purpose */
+    /* NOTE : Original code part has commented because original api misbehaving */
 
-    return await Axios({ url, method: 'get' });
+    // const url = `${Configs.EXTERNAL_URLS.IMAGE_SOURCE_SERVER}/${collectionId}.json`;
+
+    // const response = await Axios({ url, method: 'get' });
+
+    // if( !response || response.length === 0 ) THROW_ERROR('Data not found for given id', 404);
+
+    /* Original code section end */
+
+    /* TODO : delete before go production */
+    const mockData = require(`./${collectionId}.json`);
+
+    if( !mockData || Object.keys(mockData).length === 0 ) THROW_ERROR('Data not found for given id', 404);
+
+    return mockData;
 
   } catch (error) {
     throw new Error(error);
